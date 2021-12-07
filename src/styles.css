@@ -1,0 +1,89 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css");
+
+:root {
+  --background-light: #faf3dd;
+  --background: #ffa69e;
+  --primary-light: #9a8c98;
+  --primary: #4a4e69;
+  --primary-dark: #22223b;
+}
+
+html,
+body {
+  margin: 0px;
+}
+
+.App {
+  text-align: center;
+  background-color: var(--background-light);
+  height: 100vh;
+}
+
+.app__title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-dark);
+  padding: 2rem;
+}
+
+.app__subtitle {
+  font-size: 1.2rem;
+  color: var(--primary);
+  padding: 1rem;
+}
+
+.pal__inputname {
+  width: 90%;
+  max-width: 300px;
+  height: 60px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  padding: 10px 40px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.pal__input {
+  box-shadow: inset 0px 0px 6px #6a6a6a;
+}
+
+.react-date-picker__wrapper {
+  border: none !important;
+}
+
+.pal__submit {
+  background: var(--background);
+  height: 60px;
+  margin-top: 2rem;
+  width: 90%;
+  max-width: 300px;
+  border: none;
+  box-shadow: 0px 0px 6px #6a6a6a;
+}
+
+.app__resultlabel {
+  color: var(--primary-dark);
+  margin: auto;
+  padding-top: 2rem;
+  max-width: 90%;
+  font-size: 1.5rem;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+  font-size: 1rem;
+}
+
+a {
+  text-decoration: underline;
+  color: white;
+}
