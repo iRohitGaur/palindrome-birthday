@@ -7,6 +7,13 @@ export default function App() {
   const [dob, setDob] = useState(new Date());
   const [result, setResult] = useState("");
 
+  var nextPalYear = "";
+  var curYearValidPalDateFound = true;
+  var nextYearDate;
+  var nextYearDifference = 0;
+  var prevYearDate;
+  var prevYearDifference = 0;
+
   const getAllDateFormats = ({ day, month, year }) => {
     const ddmmyyyy = day + month + year;
     const mmddyyyy = month + day + year;
@@ -14,13 +21,22 @@ export default function App() {
     return [ddmmyyyy, mmddyyyy];
   };
 
-  const checkPalindrome = (e) => {
+  const getFormattedDate = (dt) => {
     const formattedDate = new Intl.DateTimeFormat("en-IN", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit"
-    }).format(dob);
+    }).format(dt);
+    return formattedDate;
+  };
 
+  const checkPalindrome = (paldt) => {
+    const formattedDate = getFormattedDate(paldt); // 12/12/2020
+    nextPalYear = formattedDate;
+    checkPalLoop(formattedDate);
+  };
+
+  const checkPalLoop = (formattedDate) => {
     const arr = formattedDate // 04/12/2021
       .split("/"); // ["04", "12", "2021"]
 
@@ -67,7 +83,19 @@ export default function App() {
         }
       }
     }
-    calcDifferenceBetweenDates(validDates);
+    if (validDates.length !== 0) {
+      calcDifferenceBetweenDates(validDates);
+    } else {
+      curYearValidPalDateFound = false;
+      const arr = nextPalYear.split("/"); //12/12/2020
+      const year = arr.pop(); // 2020
+      const addOrSub = (nextYearDifference === 0
+        ? Number(year) + 1
+        : Number(year) - 1
+      ).toString();
+      nextPalYear = [...arr, addOrSub].join("/");
+      checkPalLoop(nextPalYear);
+    }
   };
 
   const calcDifferenceBetweenDates = (validDates) => {
@@ -87,13 +115,46 @@ export default function App() {
       }
     }
     const palDate = differences.sort((a, b) => a.difference - b.difference)[0];
-    setResult(
-      `Nearest palindrome date is ${
-        palDate.validDate.date
-      } (${palDate.validDate.format.toLowerCase()}).${"\n"}You missed it by ${
-        palDate.difference
-      } days`
-    );
+    if (curYearValidPalDateFound) {
+      setResult(
+        `Nearest palindrome date is ${
+          palDate.validDate.date
+        } (${palDate.validDate.format.toLowerCase()}). You missed it by ${
+          palDate.difference
+        } days`
+      );
+    } else {
+      if (nextYearDifference === 0) {
+        nextYearDate =
+          palDate.validDate.date +
+          " (" +
+          palDate.validDate.format.toLowerCase() +
+          ")";
+        nextYearDifference = Number(palDate.difference);
+        checkPalindrome(dob);
+      } else if (prevYearDifference === 0) {
+        prevYearDate =
+          palDate.validDate.date +
+          " (" +
+          palDate.validDate.format.toLowerCase() +
+          ")";
+        prevYearDifference = Number(palDate.difference);
+
+        if (nextYearDifference > prevYearDifference) {
+          setResult(
+            `Nearest palindrome date is ${prevYearDate}. You missed it by ${prevYearDifference} days`
+          );
+        } else {
+          setResult(
+            `Nearest palindrome date is ${nextYearDate}. You missed it by ${nextYearDifference} days`
+          );
+        }
+      } else {
+        setResult(
+          "Seems like you just caught a bug. Please report it to the developer."
+        );
+      }
+    }
   };
 
   const strToDateFormat = (dateString) => {
@@ -122,14 +183,13 @@ export default function App() {
         clearIcon={false}
         onChange={setDob}
         value={dob}
-        minDate={new Date("01/01/2001")}
         maxDate={new Date()}
       />
       <input
         type="submit"
         className="pal__inputname pal__submit"
         value="Check"
-        onClick={checkPalindrome}
+        onClick={() => checkPalindrome(dob)}
       />
       <div className="app__resultlabel">{result}</div>
       <div className="footer">
